@@ -42,7 +42,7 @@ class JwtUtil (
             val id = getUserId(token)
             val cacheRefreshToken = redisService.getRefreshToken(id)
 
-            if (cacheRefreshToken != null && cacheRefreshToken == token && getType(token) == "refresh")
+            if (cacheRefreshToken != null && cacheRefreshToken == token && getTokenType(token) == "refresh")
                 return JwtErrorType.IllegalArgumentException
 
             Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token)
@@ -63,7 +63,7 @@ class JwtUtil (
     }
 
     fun getAuthentication(token: String): Authentication {
-        val userDetails: UserDetails = userDetailsService.loadUserByUsername(getUsername(token))
+        val userDetails: UserDetails = userDetailsService.loadUserByUsername(getUserId(token).toString())
         return UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
     }
 
@@ -81,7 +81,6 @@ class JwtUtil (
         val now = Date().time
         return Jwts.builder()
             .claim("id", user.id)
-            .claim("name", user.username)
             .claim("token_type", "access")
             .issuedAt(Date(now))
             .expiration(Date(now + accessTokenExpireTime))
@@ -93,7 +92,6 @@ class JwtUtil (
         val now = Date().time
         return Jwts.builder()
             .claim("id", user.id)
-            .claim("name", user.username)
             .claim("token_type", "refresh")
             .issuedAt(Date(now))
             .expiration(Date(now + refreshTokenExpireTime))
@@ -108,14 +106,7 @@ class JwtUtil (
         ).toLong()
     }
 
-    fun getUsername(token: String): String {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).payload.get(
-            "name",
-            String::class.java
-        )
-    }
-
-    fun getType(token: String): String {
+    fun getTokenType(token: String): String {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).payload.get(
             "token_type",
             String::class.java
