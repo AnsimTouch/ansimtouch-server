@@ -12,18 +12,17 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/verify")
 class VerifyController (
-    private val verifyService: VerifyService
+    private val verifyService: VerifyService,
 ) {
-    @Operation(summary = "문자 전송")
+    @Operation(summary = "인증코드 문자로 전송", description = "5분 시간제한")
     @PostMapping("/send")
     fun getUserAuthenticateCode(@RequestBody request: UserVerifyCodeRequest): BaseResponse<Unit> {
         return verifyService.sendVerification(request.tel)
     }
 
-//    @Operation(summary = "인증코드 확인")
-//    @PostMapping("/check")
-//    fun verifyUserAuthenticateCode(@RequestBody request: UserVerifyCheckRequest): String {
-//        return verifyService.checkVerification(request)
-//    }
-
+    @Operation(summary = "인증코드 확인")
+    @PostMapping("/check")
+    fun verifyUserAuthenticateCode(@RequestBody request: UserVerifyCheckRequest): BaseResponse<Unit> {
+        return verifyService.checkVerification(request)
+    }
 }

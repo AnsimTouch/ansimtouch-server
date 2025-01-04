@@ -16,11 +16,7 @@ class RedisService (
         return redisTemplate.opsForValue().get("refreshToken:$id")
     }
 
-    fun deleteRefreshToken(id: Long) {
-        redisTemplate.delete("refreshToken:$id")
-    }
-
-    fun storeProfileImage(id: Long, url: String) {
-        redisTemplate.opsForValue().set("profileImage:$id", url, 1, TimeUnit.DAYS)
+    fun getValue(key: String): String? {
+        return redisTemplate.opsForValue().get(key)
     }
 }

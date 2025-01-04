@@ -1,19 +1,20 @@
 package com.ansimtouchserver.domain.auth.service
 
+import com.ansimtouchserver.domain.auth.dto.request.UserVerifyCheckRequest
 import com.ansimtouchserver.domain.auth.exception.VerifyErrorCode
 import com.ansimtouchserver.global.dto.BaseResponse
 import com.ansimtouchserver.global.exception.CustomException
 import com.ansimtouchserver.global.redis.RedisService
-import lombok.extern.slf4j.Slf4j
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.util.*
 import net.nurigo.sdk.message.model.Message
 import net.nurigo.sdk.message.model.MessageType
 import net.nurigo.sdk.message.service.DefaultMessageService
+import org.springframework.data.redis.core.StringRedisTemplate
+import java.util.concurrent.TimeUnit
 
 
-@Slf4j
 @Service
 class VerifyService(
     @Value("\${coolsms.api.key}")
@@ -25,9 +26,10 @@ class VerifyService(
     @Value("\${coolsms.fromnumber}")
     private val fromNumber: String,
 
-    private val redisService: RedisService,
+    private val redisTemplate: StringRedisTemplate,
+    private val redisService: RedisService
 ) {
-    fun sendVerification(to: String): BaseResponse<Unit> {
+    fun sendVerification(tel: String): BaseResponse<Unit> {
         try {
             val numStr = generateRandomNumber()
 
@@ -35,14 +37,16 @@ class VerifyService(
                 kakaoOptions = null,
                 naverOptions = null,
                 rcsOptions = null,
-                type = MessageType.SMS, // 메세지 타입
-                to = to,
+                type = MessageType.SMS,
+                to = tel,
                 from = fromNumber,
                 text = "인증번호는 [$numStr] 입니다."
             )
 
             val messageService = DefaultMessageService(apiKey, apiSecretKey, "https://api.coolsms.co.kr")
             messageService.send(message)
+
+            redisTemplate.opsForValue().set(tel, numStr, 5, TimeUnit.MINUTES) // 5분
 
             return BaseResponse(
                 message = "인증코드 전송 성공"
@@ -53,7 +57,7 @@ class VerifyService(
     }
 
     private fun generateRandomNumber(): String {
-        val rand: Random = Random()
+        val rand = Random()
         val numStr = StringBuilder()
         for (i in 0..3) {
             numStr.append(rand.nextInt(10))
@@ -61,4 +65,16 @@ class VerifyService(
         return numStr.toString()
     }
 
+    fun checkVerification(request: UserVerifyCheckRequest): BaseResponse<Unit> {
+        val storedCode: String? = redisService.getValue(request.tel)
+
+        if(storedCode != null && storedCode == request.code) {
+            redisTemplate.delete(request.tel)
+            return BaseResponse(
+                message = "인증 성공"
+            )
+        } else {
+            throw CustomException(VerifyErrorCode.VERIFICATION_FAILED)
+        }
+    }
 }
