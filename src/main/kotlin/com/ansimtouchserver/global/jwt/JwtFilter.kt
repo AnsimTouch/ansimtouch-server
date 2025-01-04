@@ -21,7 +21,7 @@ class JwtFilter (
     ) {
         val path: String = request.servletPath
 
-        if (path.startsWith("/auth") || path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs")) {
+        if (path.startsWith("/auth") || path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs") || path.startsWith("/verify")) {
             filterChain.doFilter(request, response)
             return
         }

@@ -46,7 +46,7 @@ class SecurityConfig (
             .authorizeHttpRequests {
                 it
                     .requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**").permitAll()
-                    .requestMatchers("/auth/**").anonymous()
+                    .requestMatchers("/auth/**", "/verify/**").anonymous()
                     .anyRequest().authenticated()
             }
 
