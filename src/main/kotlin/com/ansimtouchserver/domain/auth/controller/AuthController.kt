@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 class AuthController (
     private val authService: AuthService
 ) {
-    @Operation(summary = "User Sign-Up", description = "보호자는 Protector, 관리대상자는 Ward")
+    @Operation(summary = "User Sign-Up", description = "보호자는 Protector, 관리대상자는 Ward \n 사용자가 휴대폰 인증을했는지 처리해줘야함")
     @PostMapping("/sign-up")
     fun register(@RequestBody authSignupRequest: AuthSignupRequest): BaseResponse<Unit> {
         return authService.signup(authSignupRequest)
