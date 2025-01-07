@@ -6,6 +6,10 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.jpa' version '1.9.25'
 }
 
+ext {
+    springAiVersion = "1.0.0-M4"
+}
+
 group = 'com'
 version = '0.0.1-SNAPSHOT'
 
@@ -17,6 +21,8 @@ java {
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://repo.spring.io/release' }
 }
 
 dependencies {
@@ -29,6 +35,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
     testImplementation 'org.springframework.security:spring-security-test'
@@ -45,11 +52,21 @@ dependencies {
 
     // sms verify
     implementation 'net.nurigo:sdk:4.2.7'
+
+    implementation 'org.springframework.ai:spring-ai-openai:0.8.0'
+    implementation 'org.springframework.ai:spring-ai-core:0.8.0'
 }
 
 kotlin {
     compilerOptions {
         freeCompilerArgs.addAll '-Xjsr305=strict'
+    }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:3.4.1"
+        mavenBom "org.springframework.ai:spring-ai-bom:$springAiVersion"
     }
 }
 

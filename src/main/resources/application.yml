@@ -6,6 +6,8 @@ spring:
     redis:
       host: ${REDIS_HOST}
       port: 6379
+    mongodb:
+      uri: ${MONGODB_URL}
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -20,6 +22,16 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
     show-sql: true
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      api-url: ${OPENAI_API_URL}
+      assistantId: ${OPENAI_ASSISTANT_ID}
+
+  cloud:
+    function:
+      enabled: false
 
 jwt:
   secret: ${JWT_SECRET}
