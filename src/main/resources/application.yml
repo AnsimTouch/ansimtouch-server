@@ -38,6 +38,10 @@ jwt:
   access-token-expire-time: 3600000
   refresh-token-expire-time: 604800000
 
+map:
+  api:
+    key: ${KAKAO_MAP_API}
+
 coolsms:
   api:
     key: ${COOLSMS_KEY}
