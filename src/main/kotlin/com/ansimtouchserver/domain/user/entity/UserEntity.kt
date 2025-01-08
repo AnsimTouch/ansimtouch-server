@@ -16,5 +16,7 @@ class UserEntity (
     var password: String,
 
     @Enumerated(EnumType.STRING)
-    var userType: UserType? = null
+    var userType: UserType? = null,
+
+    var fcmToken: String? = null,
 )

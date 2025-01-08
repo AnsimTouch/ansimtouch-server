@@ -5,9 +5,11 @@ import com.ansimtouchserver.domain.user.entity.UserType
 data class GetMeResponse (
     val id: Long = 0,
 
-    var username: String,
+    val username: String,
 
-    var tel: String,
+    val tel: String,
 
-    var userType: UserType? = null
+    val userType: UserType? = null,
+
+    val fcmToken: String? = null,
 )
