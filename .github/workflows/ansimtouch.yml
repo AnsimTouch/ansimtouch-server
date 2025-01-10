@@ -32,9 +32,6 @@ jobs:
         run: |
           rm -f .env 
           echo "${{ secrets.ENV }}" > .env
-          
-          rm -f ansimtouch-e73c0-firebase-adminsdk-th6cu-d47e7c4a34.json 
-          echo "${{ secrets.FIREBASE }}" > ansimtouch-e73c0-firebase-adminsdk-th6cu-d47e7c4a34.json
         shell: bash
 
       - name: Build and push Docker image
