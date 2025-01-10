@@ -1,4 +1,4 @@
-package com.ansimtouchserver.domain.attendance.service
+package com.ansimtouchserver.global.util
 
 import com.google.firebase.messaging.Message
 import org.springframework.stereotype.Service
