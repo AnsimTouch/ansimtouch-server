@@ -2,7 +2,9 @@ package com.ansimtouchserver.domain.user.controller
 
 import com.ansimtouchserver.domain.user.dto.request.FcmRequest
 import com.ansimtouchserver.domain.user.dto.response.GetMeResponse
+import com.ansimtouchserver.domain.user.dto.response.UserRelationResponse
 import com.ansimtouchserver.domain.user.entity.Request
+import com.ansimtouchserver.domain.user.entity.UserEntity
 import com.ansimtouchserver.domain.user.entity.UserType
 import com.ansimtouchserver.domain.user.exception.UserErrorCode
 import com.ansimtouchserver.domain.user.repository.UserRepository
@@ -33,7 +35,7 @@ class UserController(
         return userService.getMe(principal)
     }
 
-    @Operation(summary = "마이페이지")
+    @Operation(summary = "유저 조회하기")
     @GetMapping("/{userId}")
     fun getUser(@PathVariable userId: Long): GetMeResponse {
         return userService.getUser(userId)
@@ -69,5 +71,11 @@ class UserController(
     @PostMapping("/approve")
     fun approveRequest(requestId: String): BaseResponse<Unit> {
         return userService.approveRequest(requestId)
+    }
+
+    @Operation(summary = "유저 관계 조회")
+    @GetMapping("/relationship")
+    fun getRelationships(@RequestParam userId: Long): Map<String, List<UserRelationResponse>> {
+        return userService.getUserRelations(userId)
     }
 }

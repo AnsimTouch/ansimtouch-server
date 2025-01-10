@@ -1,6 +1,7 @@
 package com.ansimtouchserver.domain.user.service
 
 import com.ansimtouchserver.domain.user.dto.response.GetMeResponse
+import com.ansimtouchserver.domain.user.dto.response.UserRelationResponse
 import com.ansimtouchserver.domain.user.entity.Request
 import com.ansimtouchserver.domain.user.entity.UserEntity
 import com.ansimtouchserver.domain.user.exception.UserErrorCode
@@ -74,5 +75,12 @@ class UserService (
         return BaseResponse(
             message = "유저 추가 승인 성공",
         )
+    }
+
+    fun getUserRelations(userId: Long): Map<String, List<UserRelationResponse>> {
+        val user = userRepository.findById(userId).orElseThrow { Exception("User not found") }
+        val protectees = user.wards.map { UserRelationResponse(it.id) }
+        val protectors = user.protectors.map { UserRelationResponse(it.id) }
+        return mapOf("protectees" to protectees, "protectors" to protectors)
     }
 }
