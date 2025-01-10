@@ -11,8 +11,6 @@ import java.time.LocalDate
 @Service
 class AttendanceService (
     private val attendanceRepository: AttendanceRepository,
-    private val userRepository: UserRepository,
-    private val notificationService: NotificationService
 ) {
     fun markAttendance(userId: Long): BaseResponse<Unit> {
         val today = LocalDate.now().toString()
