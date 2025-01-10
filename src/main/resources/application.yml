@@ -47,3 +47,6 @@ coolsms:
     key: ${COOLSMS_KEY}
     secret: ${COOLSMS_SECRET}
   fromnumber: ${COOLSMS_FROMNUMBER}
+
+firebase:
+  json-key: ${FIREBASE_JSON_KEY}
