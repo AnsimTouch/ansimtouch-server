@@ -11,6 +11,7 @@ import com.ansimtouchserver.global.dto.BaseResponse
 import com.ansimtouchserver.global.exception.CustomException
 import org.springframework.stereotype.Service
 import java.security.Principal
+import java.time.LocalDateTime
 
 @Service
 class UserService (
@@ -24,6 +25,9 @@ class UserService (
             tel = user.tel,
             userType = user.userType,
             fcmToken = user.fcmToken,
+            lastUpdatedAt = user.lastUpdatedAt,
+            lastLocationLa = user.lastLocationLa,
+            lastLocationLo = user.lastLocationLo
         )
     }
 
@@ -78,9 +82,19 @@ class UserService (
     }
 
     fun getUserRelations(userId: Long): Map<String, List<UserRelationResponse>> {
-        val user = userRepository.findById(userId).orElseThrow { Exception("User not found") }
+        val user = userRepository.findById(userId).orElseThrow { CustomException(UserErrorCode.USER_NOT_FOUND)}
         val protectees = user.wards.map { UserRelationResponse(it.id) }
         val protectors = user.protectors.map { UserRelationResponse(it.id) }
         return mapOf("protectees" to protectees, "protectors" to protectors)
+    }
+
+    fun updateUserStatus(user: UserEntity, last: LocalDateTime, la: Double, lo: Double): BaseResponse<Unit> {
+        user.lastUpdatedAt = last
+        user.lastLocationLa = la
+        user.lastLocationLa = lo
+        userRepository.save(user)
+        return BaseResponse(
+            message = "유저 상태 업데이트 성공"
+        )
     }
 }

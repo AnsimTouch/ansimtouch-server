@@ -1,10 +1,10 @@
 package com.ansimtouchserver.domain.user.controller
 
 import com.ansimtouchserver.domain.user.dto.request.FcmRequest
+import com.ansimtouchserver.domain.user.dto.request.UserStatusRequest
 import com.ansimtouchserver.domain.user.dto.response.GetMeResponse
 import com.ansimtouchserver.domain.user.dto.response.UserRelationResponse
 import com.ansimtouchserver.domain.user.entity.Request
-import com.ansimtouchserver.domain.user.entity.UserEntity
 import com.ansimtouchserver.domain.user.entity.UserType
 import com.ansimtouchserver.domain.user.exception.UserErrorCode
 import com.ansimtouchserver.domain.user.repository.UserRepository
@@ -77,5 +77,12 @@ class UserController(
     @GetMapping("/relationship")
     fun getRelationships(@RequestParam userId: Long): Map<String, List<UserRelationResponse>> {
         return userService.getUserRelations(userId)
+    }
+
+    @Operation(summary = "유저 상태 업데이트")
+    @PostMapping("/status")
+    fun updateUserStatus(principal: Principal, @RequestBody userStatus: UserStatusRequest): BaseResponse<Unit> {
+        val user = userRepository.findByTel(principal.name).orElseThrow {CustomException(UserErrorCode.USER_NOT_FOUND)}
+        return userService.updateUserStatus(user, userStatus.lastUpdatedAt, userStatus.lastLocationLa, userStatus.lastLocationLo)
     }
 }
