@@ -53,8 +53,12 @@ dependencies {
     // sms verify
     implementation 'net.nurigo:sdk:4.2.7'
 
+    // openai
     implementation 'org.springframework.ai:spring-ai-openai:0.8.0'
     implementation 'org.springframework.ai:spring-ai-core:0.8.0'
+
+    // firebase
+    implementation 'com.google.firebase:firebase-admin:9.3.0'
 }
 
 kotlin {
