@@ -31,6 +31,11 @@ class UserService (
         return formUser(user)
     }
 
+    fun getUser(userId: Long): GetMeResponse {
+        val user = userRepository.findById(userId).orElseThrow{CustomException(UserErrorCode.USER_NOT_FOUND)}
+        return formUser(user)
+    }
+
     fun registerFcmToken(principal: Principal, fcmToken: String): BaseResponse<Unit>{
         val user = userRepository.findByTel(principal.name).orElseThrow{CustomException(UserErrorCode.USER_NOT_FOUND)}
         user.fcmToken = fcmToken
